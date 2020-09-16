@@ -1,7 +1,7 @@
 Object.assign(window, Vue)
 
 let app1 = createApp({
-  template: `<p v-on:click="onOK()">{{displayName}}</p>`,
+  template: `<p v-on:click="onOK()" >{{displayName}}</p>`,
   data() {
     return {
       name: 'Baoli'
@@ -21,6 +21,7 @@ let app1 = createApp({
     }
   }
 })
+
 let m1 = app1.mount('#app2')
 
 let app2Factory = () =>
@@ -37,7 +38,7 @@ let app2Factory = () =>
         // }
       },
       render() {
-        return h(
+        let node = h(
           'div',
           {
             id: 'displayName',
@@ -51,6 +52,7 @@ let app2Factory = () =>
             h(resolveComponent('me'), { ref: 'me' })
           ]
         )
+        return withDirectives(node, [[resolveDirective('balabala'), 'ok']])
       },
       created() {
         // this.provides("globalName", "ZBL")
@@ -159,6 +161,12 @@ function getCashlessState() {
 }
 getCashlessState()
 
+app2.directive('balabala', {
+  mounted(el, binding, vnode) {
+    console.log(`%cbalabala ${binding.value}`, 'color: red;')
+  }
+})
+
 app2.component('me', {
   template: `
   <h6 style='color: red;margin: 0 20px 0 0 ;display:inline-block;'>{{userName}}</h6>
@@ -175,9 +183,10 @@ app2.component('me', {
     }
   }
 })
-
+app2.config.globalProperties.test = ref('test')
 let m2 = app2.mount('#app1')
 ngxCom.cardIn()
 
 let c = m2.$
+let mm = c.refs.me
 let cc = c.refs.me.$
